@@ -3,9 +3,9 @@ package configuration;
 import lombok.Data;
 import lombok.Getter;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -57,6 +57,29 @@ public class CandyObject<T> {
             throw new IndexOutOfBoundsException("pointer out of " + t.getClass().getName() + "fields num");
         }
     }
+
+    public List<Title> buildTitle(){
+        titles = new ArrayList<Title>();
+        int i = 0;
+        for(CandyField f : candyFields) {
+            Title title = new Title(f.title,i++);
+            titles.add(title);
+        }
+        return titles;
+    }
+
+    private List<Title> titles;
+    @Data
+    public static class Title {
+        int titleIndex ;
+        private String title;
+        public Title(String title,int index) {
+            this.title = title;
+            this.titleIndex = index;
+        }
+    }
+
+
 
     @Data
     public static class CandyField<T> {

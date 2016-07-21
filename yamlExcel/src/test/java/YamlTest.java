@@ -27,6 +27,7 @@ public class YamlTest {
         user.setName("lilei");
         user.setStatus(2);
         user.setType(1);
+        System.out.println(fields.buildTitle());
 
         fields.putCandy(user);
         System.out.println(fields.pointOut());
