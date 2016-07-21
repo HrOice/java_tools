@@ -7,6 +7,7 @@ import org.apache.poi.ss.usermodel.Row;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -85,6 +86,11 @@ public class CandyObject<T> {
 
     @Data
     public static class CandyField<T> {
+
+        private static final String JAVA_LANG = "java.lang.";
+        private static final String JAVA_UTIL = "java.util.";
+
+        private static final SimpleDateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         private String fieldName;
 
         private String title;
@@ -92,6 +98,8 @@ public class CandyObject<T> {
         private Type fieldType;
 
         private String type;
+
+        private String timeFormat;
 
         private Map<Object,Object> enumMap;
 
@@ -105,9 +113,14 @@ public class CandyObject<T> {
             }
         }
 
+        /**
+         * 给对象赋值 Long String Integer Date
+         * @param input
+         * @throws Exception
+         */
         private void setFieldValue(Object input) throws Exception{
             Method method = objClazz.getMethod("set" + fieldName.substring(0, 1).toUpperCase()
-                    + fieldName.substring(1),Class.forName("java.lang." + type));
+                    + fieldName.substring(1),parseType());
             Object trueValue;
             if (this.enumMap != null && this.enumMap.containsValue(input)) {
                 trueValue = getKeyViaValue(input);
@@ -120,6 +133,13 @@ public class CandyObject<T> {
                 method.invoke(obj, (String)trueValue);
             } else if (type.equals("Integer")) {
                 method.invoke(obj, (Integer)trueValue);
+            } else if (type.equals("Date")) {
+                if (this.timeFormat == null) {
+                    method.invoke(obj, DEFAULT_DATE_FORMAT.parse(trueValue.toString()));
+                } else{
+                    SimpleDateFormat sdf = new SimpleDateFormat(timeFormat);
+                    method.invoke(obj, sdf.parse(trueValue.toString()));
+                }
             }
         }
 
@@ -130,6 +150,21 @@ public class CandyObject<T> {
                 }
             }
             return input;
+        }
+
+        private Class parseType() throws ClassNotFoundException{
+            switch (this.type) {
+                case "String":
+                    return Class.forName(JAVA_LANG + "String");
+                case "Integer":
+                    return Class.forName(JAVA_LANG + "Integer");
+                case "Long":
+                    return Class.forName(JAVA_LANG + "Long");
+                case "Date":
+                    return Class.forName(JAVA_UTIL + "Date");
+                default:
+                    throw new IllegalArgumentException("undefined type" + this.type);
+            }
         }
     }
 

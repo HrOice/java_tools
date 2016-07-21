@@ -21,4 +21,5 @@ candyFields:
     type: String
   - fieldName: createdAt
     title: 创建时间
-    type: String
+    type: Date
+    timeFormat: "yyyyMMdd HHmmss"

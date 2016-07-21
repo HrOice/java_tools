@@ -85,6 +85,9 @@ public class YamlTest {
         candyObject.insertValue(123L);
         candyObject.insertValue("xiaoming");
         candyObject.insertValue("普通");
+        candyObject.insertValue("冻结");
+        candyObject.insertValue("18626410208");
+        candyObject.insertValue("20160701 080000");
         System.out.println(user);
 
     }
