@@ -2,6 +2,8 @@ package configuration;
 
 import lombok.Data;
 import lombok.Getter;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
@@ -30,7 +32,7 @@ public class CandyObject<T> {
 
     private Iterator<CandyField<T>> fieldPoint;
 
-    public void setClassName(String className) throws ClassNotFoundException{
+    public void setClassName(String className) throws ClassNotFoundException {
         this.className = className;
         objClazz = Class.forName(className);
     }
@@ -41,16 +43,16 @@ public class CandyObject<T> {
         this.fieldPoint = candyFields.iterator();
     }
 
-    public Object getCandy(){
+    public Object getCandy() {
         return this.obj;
     }
 
-    public Object pointOut(){
+    public Object pointOut() {
         if (this.fieldPoint.hasNext()) {
             CandyField<T> pointer = this.fieldPoint.next();
             try {
                 return pointer.getFieldValue();
-            }catch (Exception e) {
+            } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         } else {
@@ -58,27 +60,30 @@ public class CandyObject<T> {
         }
     }
 
-    public List<Title> buildTitle(){
+    public List<Title> buildTitle(Row titleRow) {
         titles = new ArrayList<Title>();
         int i = 0;
-        for(CandyField f : candyFields) {
-            Title title = new Title(f.title,i++);
+        for (CandyField f : candyFields) {
+            Cell cell = titleRow.createCell(i);
+            cell.setCellValue(f.title);
+            Title title = new Title(f.title, i++);
             titles.add(title);
         }
         return titles;
     }
 
     private List<Title> titles;
+
     @Data
     private static class Title {
-        int titleIndex ;
+        int titleIndex;
         private String title;
-        private Title(String title,int index) {
+
+        private Title(String title, int index) {
             this.title = title;
             this.titleIndex = index;
         }
     }
-
 
 
     @Data
@@ -93,12 +98,12 @@ public class CandyObject<T> {
 
         private Map enumMap;
 
-        private Object getFieldValue() throws Exception{
-            Method method = objClazz.getMethod("get" + fieldName.substring(0,1).toUpperCase() + fieldName.substring(1));
+        private Object getFieldValue() throws Exception {
+            Method method = objClazz.getMethod("get" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1));
             Object value = method.invoke(obj, null);
             if (this.enumMap != null && this.enumMap.containsKey(value)) {
                 return this.enumMap.get(value);
-            }else{
+            } else {
                 return value;
             }
         }

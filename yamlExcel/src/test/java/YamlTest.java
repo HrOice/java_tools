@@ -1,15 +1,17 @@
 import bean.User;
 import com.google.common.base.Charsets;
+import com.google.common.collect.Lists;
 import com.google.common.io.Resources;
 import configuration.CandyObject;
+import excel.in.ExcelBuilder;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.junit.Test;
 import org.yaml.snakeyaml.Yaml;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.Writer;
+import java.io.*;
 import java.lang.reflect.Field;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -20,32 +22,24 @@ import java.util.Map;
 public class YamlTest {
     @Test
     public void yamlTest() throws Exception{
-        String file = Resources.toString(Resources.getResource("auth/user.yaml"), Charsets.UTF_8);
-        CandyObject<User> fields = new Yaml().loadAs(file, CandyObject.class);
+//        String file = Resources.toString(Resources.getResource("auth/user.yaml"), Charsets.UTF_8);
+//        CandyObject fields = new Yaml().loadAs(file, CandyObject.class);
         User user = new User();
         user.setId(1L);
         user.setName("lilei");
         user.setStatus(2);
         user.setType(1);
-        System.out.println(fields.buildTitle());
-
-        fields.putCandy(user);
-        System.out.println(fields.pointOut());
-        System.out.println(fields.pointOut());
-        System.out.println(fields.pointOut());
-        System.out.println(fields.pointOut());
-        System.out.println("--");
 
         User user1 = new User();
         user1.setId(2L);
         user1.setName("polly");
         user1.setStatus(2);
         user1.setType(1);
-        fields.putCandy(user1);
-        System.out.println(fields.pointOut());
-        System.out.println(fields.pointOut());
-        System.out.println(fields.pointOut());
-        System.out.println(fields.pointOut());
+        List<User> list = Lists.newArrayList(user1,user);
+        ExcelBuilder excelBuilder = new ExcelBuilder("auth/user.yaml");
+        Workbook wb = excelBuilder.build(list);
+        OutputStream outputStream = new FileOutputStream(new File("/Users/macbook/Desktop/user.xlsx"));
+        wb.write(outputStream);
     }
 
     @Test
