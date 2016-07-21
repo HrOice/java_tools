@@ -7,10 +7,7 @@ import org.apache.poi.ss.usermodel.Row;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * DATE: 16/7/20 22:04 <br>
@@ -56,7 +53,7 @@ public class CandyObject<T> {
                 throw new RuntimeException(e);
             }
         } else {
-            throw new IndexOutOfBoundsException("pointer out of " + t.getClass().getName() + "fields num");
+            throw new IndexOutOfBoundsException("pointer out of " + t.getClass().getName() + " fields num");
         }
     }
 
@@ -96,7 +93,7 @@ public class CandyObject<T> {
 
         private String type;
 
-        private Map enumMap;
+        private Map<Object,Object> enumMap;
 
         private Object getFieldValue() throws Exception {
             Method method = objClazz.getMethod("get" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1));
@@ -106,6 +103,56 @@ public class CandyObject<T> {
             } else {
                 return value;
             }
+        }
+
+        private void setFieldValue(Object input) throws Exception{
+            Method method = objClazz.getMethod("set" + fieldName.substring(0, 1).toUpperCase()
+                    + fieldName.substring(1),Class.forName("java.lang." + type));
+            Object trueValue;
+            if (this.enumMap != null && this.enumMap.containsValue(input)) {
+                trueValue = getKeyViaValue(input);
+            } else {
+                trueValue = input;
+            }
+            if (type.equals("Long")){
+                method.invoke(obj, (Long)trueValue);
+            } else if (type.equals("String")) {
+                method.invoke(obj, (String)trueValue);
+            } else if (type.equals("Integer")) {
+                method.invoke(obj, (Integer)trueValue);
+            }
+        }
+
+        private Object getKeyViaValue(Object input){
+            for (Map.Entry entry: this.enumMap.entrySet()) {
+                if (entry.getValue().toString().equals(input.toString())) {
+                    return entry.getKey();
+                }
+            }
+            return input;
+        }
+    }
+
+    /**
+     * 新建T,设置field
+     */
+    public Object createCandy() throws Exception{
+        this.t = (T)objClazz.newInstance();
+        this.obj = objClazz.newInstance();
+        this.fieldPoint = candyFields.iterator();
+        return this.obj;
+    }
+
+    public void insertValue(Object input){
+        if (this.fieldPoint.hasNext()) {
+            CandyField<T> pointer = this.fieldPoint.next();
+            try {
+                pointer.setFieldValue(input);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            throw new IndexOutOfBoundsException("pointer out of " + t.getClass().getName() + " fields num");
         }
     }
 }

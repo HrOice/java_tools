@@ -75,4 +75,17 @@ public class YamlTest {
 //        Field f = c.getDeclaredField("name");
 //        Object p = f.
     }
+
+    @Test
+    public void setT() throws Exception{
+        String file = Resources.toString(Resources.getResource("auth/user.yaml"), Charsets.UTF_8);
+        CandyObject candyObject = new Yaml().loadAs(file, CandyObject.class);
+        User user = (User)candyObject.createCandy();
+
+        candyObject.insertValue(123L);
+        candyObject.insertValue("xiaoming");
+        candyObject.insertValue("普通");
+        System.out.println(user);
+
+    }
 }
