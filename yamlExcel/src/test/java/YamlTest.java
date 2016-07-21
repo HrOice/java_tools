@@ -11,6 +11,7 @@ import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
 import java.lang.reflect.Field;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +38,7 @@ public class YamlTest {
         user1.setStatus(2);
         user1.setType(1);
         user1.setMobile("18012345678");
+        user1.setCreatedAt(new Date());
         List<User> list = Lists.newArrayList(user1,user);
         ExcelBuilder excelBuilder = new ExcelBuilder("auth/user.yaml");
         Sheet s = excelBuilder.sheetBuild();

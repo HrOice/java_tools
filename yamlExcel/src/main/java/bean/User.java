@@ -2,6 +2,8 @@ package bean;
 
 import lombok.Data;
 
+import java.util.Date;
+
 /**
  * DATE: 16/7/20 23:20 <br>
  * MAIL: lbw@terminus.io <br>
@@ -18,4 +20,6 @@ public class User {
     private Integer status;
 
     private String mobile;
+
+    private Date createdAt;
 }

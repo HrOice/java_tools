@@ -19,3 +19,6 @@ candyFields:
   - fieldName: mobile
     title: 手机号码
     type: String
+  - fieldName: createdAt
+    title: 创建时间
+    type: String
