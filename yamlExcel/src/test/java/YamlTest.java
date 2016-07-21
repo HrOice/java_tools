@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.io.Resources;
 import configuration.CandyObject;
 import excel.in.ExcelBuilder;
+import excel.out.ExcelParser;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.junit.Test;
@@ -40,12 +41,15 @@ public class YamlTest {
         user1.setMobile("18012345678");
         user1.setCreatedAt(new Date());
         List<User> list = Lists.newArrayList(user1,user);
+
+
+        /**************/
         ExcelBuilder excelBuilder = new ExcelBuilder("auth/user.yaml");
         Sheet s = excelBuilder.sheetBuild();
         excelBuilder.titleBuild(s);
         excelBuilder.contentBuild(list,s);
         Workbook wb = excelBuilder.getWb();
-
+        /**************/
 
 //        Workbook wb = excelBuilder.build(list);
         OutputStream outputStream = new FileOutputStream(new File("/Users/macbook/Desktop/user.xlsx"));
@@ -70,13 +74,6 @@ public class YamlTest {
     }
 
     @Test
-    public void propertyTest() throws Exception{
-//        Class c = User.class;
-//        Field f = c.getDeclaredField("name");
-//        Object p = f.
-    }
-
-    @Test
     public void setT() throws Exception{
         String file = Resources.toString(Resources.getResource("auth/user.yaml"), Charsets.UTF_8);
         CandyObject candyObject = new Yaml().loadAs(file, CandyObject.class);
@@ -90,5 +87,14 @@ public class YamlTest {
         candyObject.insertValue("20160701 080000");
         System.out.println(user);
 
+    }
+
+    @Test
+    public void importTest() throws Exception{
+//        String file = Resources.toString(Resources.getResource("auth/user.yaml"), Charsets.UTF_8);
+//        CandyObject fields = new Yaml().loadAs(file, CandyObject.class);
+        ExcelParser excelParser = new ExcelParser("auth/user.yaml");
+        List<User> list = excelParser.parseContent(new FileInputStream(new File("/Users/macbook/Desktop/user.xlsx")));
+        System.out.println(list);
     }
 }

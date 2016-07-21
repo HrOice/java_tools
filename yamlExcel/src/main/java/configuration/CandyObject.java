@@ -127,18 +127,21 @@ public class CandyObject<T> {
             } else {
                 trueValue = input;
             }
-            if (type.equals("Long")){
-                method.invoke(obj, (Long)trueValue);
-            } else if (type.equals("String")) {
-                method.invoke(obj, (String)trueValue);
-            } else if (type.equals("Integer")) {
-                method.invoke(obj, (Integer)trueValue);
-            } else if (type.equals("Date")) {
-                if (this.timeFormat == null) {
-                    method.invoke(obj, DEFAULT_DATE_FORMAT.parse(trueValue.toString()));
-                } else{
-                    SimpleDateFormat sdf = new SimpleDateFormat(timeFormat);
-                    method.invoke(obj, sdf.parse(trueValue.toString()));
+            if (trueValue != null && trueValue != "") {
+                if (type.equals("Long")) {
+                    method.invoke(obj, Long.parseLong(trueValue.toString()));
+                } else if (type.equals("String")) {
+                    method.invoke(obj, (String) trueValue);
+                } else if (type.equals("Integer")) {
+                    method.invoke(obj, Integer.parseInt(trueValue.toString()));
+                } else if (type.equals("Date")) {
+
+                    if (this.timeFormat == null) {
+                        method.invoke(obj, DEFAULT_DATE_FORMAT.parse(trueValue.toString()));
+                    } else {
+                        SimpleDateFormat sdf = new SimpleDateFormat(timeFormat);
+                        method.invoke(obj, sdf.parse(trueValue.toString()));
+                    }
                 }
             }
         }
