@@ -1,0 +1,15 @@
+className: bean.User
+candyFields:
+  - fieldName: type
+    type: Integer
+    enumMap:
+      {1 : '普通' ,2 : '管理员'}
+  - fieldName: id
+    type: Long
+  - fieldName: status
+    type: Integer
+    enumMap:
+      {1 : '正常',2 : '冻结'}
+  - fieldName: name
+    type: String
+
