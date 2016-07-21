@@ -35,21 +35,41 @@ public class ExcelBuilder<T> {
         }
     }
 
+    /**
+     *
+     * @param list
+     * @return
+     */
     public Workbook build(List<T> list){
         Sheet s = sheetBuild();
         titleBuild(s);
         contentBuild(list,s);
         return wb;
     }
-    private Sheet sheetBuild(){
+
+    /**
+     * 创建sheet
+     * @return
+     */
+    public Sheet sheetBuild(){
         return wb.createSheet();
     }
-    private void titleBuild(Sheet s){
+
+    /**
+     * 创建标题row
+     * @param s
+     */
+    public void titleBuild(Sheet s){
         Row titleRow = s.createRow(0);
         candyObject.buildTitle(titleRow);
     }
 
-    private void contentBuild(List<T> list,Sheet s){
+    /**
+     * 创建内容
+     * @param list 数据列表
+     * @param s sheet
+     */
+    public void contentBuild(List<T> list,Sheet s){
         int rowNum = 1;
         for(T t: list) {
             Row contentRow = s.createRow(rowNum);
@@ -57,7 +77,8 @@ public class ExcelBuilder<T> {
             int i = 0;
             while(i<candyObject.getCandyFields().size()){
                 Cell cell = contentRow.createCell(i++);
-                cell.setCellValue(candyObject.pointOut().toString());
+                Object v = candyObject.pointOut();
+                cell.setCellValue(v == null ? "" : v.toString());
             }
             rowNum++;
         }

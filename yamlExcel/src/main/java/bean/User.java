@@ -16,4 +16,6 @@ public class User {
     private Integer type;
 
     private Integer status;
+
+    private String mobile;
 }

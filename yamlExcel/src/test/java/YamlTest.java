@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.io.Resources;
 import configuration.CandyObject;
 import excel.in.ExcelBuilder;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.junit.Test;
 import org.yaml.snakeyaml.Yaml;
@@ -35,9 +36,16 @@ public class YamlTest {
         user1.setName("polly");
         user1.setStatus(2);
         user1.setType(1);
+        user1.setMobile("18012345678");
         List<User> list = Lists.newArrayList(user1,user);
         ExcelBuilder excelBuilder = new ExcelBuilder("auth/user.yaml");
-        Workbook wb = excelBuilder.build(list);
+        Sheet s = excelBuilder.sheetBuild();
+        excelBuilder.titleBuild(s);
+        excelBuilder.contentBuild(list,s);
+        Workbook wb = excelBuilder.getWb();
+
+
+//        Workbook wb = excelBuilder.build(list);
         OutputStream outputStream = new FileOutputStream(new File("/Users/macbook/Desktop/user.xlsx"));
         wb.write(outputStream);
     }
