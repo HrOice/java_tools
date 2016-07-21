@@ -33,6 +33,7 @@ public class YamlTest {
         System.out.println(fields.pointOut());
         System.out.println(fields.pointOut());
         System.out.println(fields.pointOut());
+        System.out.println(fields.pointOut());
         System.out.println("--");
 
         User user1 = new User();

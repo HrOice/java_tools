@@ -70,10 +70,10 @@ public class CandyObject<T> {
 
     private List<Title> titles;
     @Data
-    public static class Title {
+    private static class Title {
         int titleIndex ;
         private String title;
-        public Title(String title,int index) {
+        private Title(String title,int index) {
             this.title = title;
             this.titleIndex = index;
         }
